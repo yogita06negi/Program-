@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <string.h>
+
+int binarySearch(char arr[][50], int n, char key[]) {
+    int start = 0, end = n - 1;
+
+    while (start <= end) {
+        int mid = (start + end) / 2;
+
+        int cmp = strcmp(arr[mid], key);
+
+        if (cmp == 0) {
+            return mid;  // string found
+        }
+        else if (cmp < 0) {
+            start = mid + 1;   // key is alphabetically after arr[mid]
+        }
+        else {
+            end = mid - 1;     // key is alphabetically before arr[mid]
+        }
+    }
+
+    return -1; // string not found
+}
+
+int main() {
+    int n;
+    char arr[100][50], key[50];
+
+    printf("Enter number of strings: ");
+    scanf("%d", &n);
+
+    printf("Enter %d strings (sorted alphabetically):\n", n);
+    for (int i = 0; i < n; i++) {
+        scanf("%s", arr[i]);
+    }
+
+    printf("Enter string to search: ");
+    scanf("%s", key);
+
+    int result = binarySearch(arr, n, key);
+
+    if (result == -1)
+        printf("String not found\n");
+    else
+        printf("String found at index %d\n", result);
+
+    return 0;
+}

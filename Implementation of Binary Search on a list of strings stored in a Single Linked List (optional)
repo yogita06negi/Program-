@@ -1,0 +1,96 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Node Structure
+struct Node {
+    char data[50];
+    struct Node* next;
+};
+
+// Function to create a new node
+struct Node* createNode(char data[]) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    strcpy(newNode->data, data);
+    newNode->next = NULL;
+    return newNode;
+}
+
+// Function to find middle node between start and end
+struct Node* getMiddle(struct Node* start, struct Node* end) {
+    if (start == NULL)
+        return NULL;
+
+    struct Node* slow = start;
+    struct Node* fast = start->next;
+
+    while (fast != end && fast != NULL) {
+        fast = fast->next;
+        if (fast != end && fast != NULL)
+            fast = fast->next;
+        slow = slow->next;
+    }
+    return slow;
+}
+
+// Binary Search in Linked List
+struct Node* binarySearch(struct Node* head, char key[]) {
+    struct Node* start = head;
+    struct Node* end = NULL;
+
+    while (start != end) {
+        struct Node* mid = getMiddle(start, end);
+
+        if (mid == NULL)
+            return NULL;
+
+        int cmp = strcmp(mid->data, key);
+
+        if (cmp == 0)
+            return mid;
+        else if (cmp < 0)
+            start = mid->next;
+        else
+            end = mid;
+    }
+
+    return NULL; // not found
+}
+
+int main() {
+    int n;
+    char str[50];
+
+    printf("Enter number of strings: ");
+    scanf("%d", &n);
+
+    struct Node* head = NULL;
+    struct Node* temp = NULL;
+
+    printf("Enter %d strings (sorted alphabetically):\n", n);
+    for (int i = 0; i < n; i++) {
+        scanf("%s", str);
+
+        struct Node* newNode = createNode(str);
+
+        if (head == NULL) {
+            head = newNode;
+            temp = newNode;
+        } else {
+            temp->next = newNode;
+            temp = newNode;
+        }
+    }
+
+    printf("Enter string to search: ");
+    scanf("%s", str);
+
+    struct Node* result = binarySearch(head, str);
+
+    if (result == NULL)
+        printf("String not found\n");
+    else
+        printf("String found: %s\n", result->data);
+
+    return 0;
+}
